@@ -17,7 +17,7 @@
             onkeypress="handleKeyPress(event)"
           />
           <div class="search-icon" onclick="handleClickSearch()">
-            <i class="fas fa-search"></i>
+            <i id="search-icon" class="fas fa-search"></i>
           </div>
           <div class="cancel-icon" onclick="handleClickCancel()">
             <i class="fas fa-times"></i>
@@ -32,8 +32,10 @@
       const cancelBtn = document.querySelector('.cancel-icon');
       const searchInput = document.querySelector('input');
       const tableResult = document.querySelector('.table-result');
+      const searchIcon = document.querySelector('#search-icon');
 
       const handleSearch = () => {
+        setSearchIcon(false);
         searchBox.classList.add('active');
         searchBtn.classList.add('active');
         searchInput.classList.add('active');
@@ -49,9 +51,11 @@
               } else {
                 tableResult.innerHTML = createEmptyRow();
               }
+              setSearchIcon(true);
             });
         } else {
           tableResult.textContent = '';
+          setSearchIcon(true);
         }
       };
 
@@ -98,6 +102,15 @@
         table += `</div>`;
         return table;
       };
+
+      const setSearchIcon = (activate) => {
+        if (activate) {
+          searchIcon.classList.replace("fa-hourglass-start", "fa-search");
+        } else {
+          searchIcon.classList.replace("fa-search", "fa-hourglass-start");
+        }
+      }
+
     </script>
   </body>
 </html>
