@@ -1,62 +1,103 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>Buscador de médicos provida</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
   </head>
   <body>
-    <div class="search-box">
-      <input type="text" placeholder="Buscar médico...">
-      <div class="search-icon">
-        <i class="fas fa-search"></i>
+    <div class="main-container">
+      <div class="search-container">
+        <div class="search-box">
+          <input
+            type="text"
+            placeholder="Buscar médico.."
+            onkeypress="handleKeyPress(event)"
+          />
+          <div class="search-icon" onclick="handleClickSearch()">
+            <i class="fas fa-search"></i>
+          </div>
+          <div class="cancel-icon" onclick="handleClickCancel()">
+            <i class="fas fa-times"></i>
+          </div>
+        </div>
       </div>
-      <div class="cancel-icon">
-        <i class="fas fa-times"></i>
-      </div>
-      <div class="search-data"></div>
+      <div class="table-result"></div>
     </div>
     <script>
-      const searchBox = document.querySelector(".search-box");
-      const searchBtn = document.querySelector(".search-icon");
-      const cancelBtn = document.querySelector(".cancel-icon");
-      const searchInput = document.querySelector("input");
-      const searchData = document.querySelector(".search-data");
-      searchBtn.onclick = () => {
-        searchBox.classList.add("active");
-        searchBtn.classList.add("active");
-        searchInput.classList.add("active");
-        cancelBtn.classList.add("active");
+      const searchBox = document.querySelector('.search-box');
+      const searchBtn = document.querySelector('.search-icon');
+      const cancelBtn = document.querySelector('.cancel-icon');
+      const searchInput = document.querySelector('input');
+      const tableResult = document.querySelector('.table-result');
+
+      const handleSearch = () => {
+        searchBox.classList.add('active');
+        searchBtn.classList.add('active');
+        searchInput.classList.add('active');
+        cancelBtn.classList.add('active');
         searchInput.focus();
-        if(searchInput.value !== ""){
+        if (searchInput.value != '') {
           var values = searchInput.value;
-          searchData.classList.remove("active");
-
-          fetch('https://medicosfachos.herokuapp.com/medic/' + values)
-            .then(response => response.json())
-            .then(json => {
-                var html = "";
-                json.forEach(obj => {
-                  var inst = obj.institucion === "" ? "N/A" : obj.institucion
-                  html = html + "<br/>" + obj.nombre + " | " + inst;
-                  console.log(obj.nombre);
-                });
-                searchData.innerHTML = html;
-            })
-        }else{
-          searchData.textContent = "";
+          fetch('http://medicosfachos.herokuapp.com/medic/' + values)
+            .then((response) => response.json())
+            .then((json) => {
+              if (json.length > 0) {
+                tableResult.innerHTML = createTable(json);
+              } else {
+                tableResult.innerHTML = createEmptyRow();
+              }
+            });
+        } else {
+          tableResult.textContent = '';
         }
-      }
-      cancelBtn.onclick =()=>{
-        searchBox.classList.remove("active");
-        searchBtn.classList.remove("active");
-        searchInput.classList.remove("active");
-        cancelBtn.classList.remove("active");
-        searchData.classList.toggle("active");
-        searchInput.value = "";
-      }
-    </script>
+      };
 
+      const handleKeyPress = (event) => {
+        if (event.charCode === 13) {
+          handleSearch();
+        }
+      };
+
+      const handleClickSearch = () => {
+        handleSearch();
+      };
+
+      const handleClickCancel = () => {
+        searchBox.classList.remove('active');
+        searchBtn.classList.remove('active');
+        searchInput.classList.remove('active');
+        cancelBtn.classList.remove('active');
+        searchInput.value = '';
+        tableResult.innerHTML = '';
+      };
+
+      const createRow = (item) => {
+        let { nombre, region, institucion } = item;
+        return `<div class='search-row'><div class='search-col'>${nombre}</div><div class='search-col'>${region}</div><div class='search-col'>${
+          institucion === '' ? 'N/A' : institucion
+        }</div></div>`;
+      };
+
+      const createEmptyRow = () => {
+        return `<div class='search-data'><div class='search-row'><div class='search-col'>No hay medicos asociados al nombre ingresado</div></div></div>`;
+      };
+
+      const createHeader = () => {
+        return `<header class='search-header'><div class='search-col'>Nombre</div><div class='search-col'>Región</div><div class='search-col'>Institución</div></header>`;
+      };
+
+      const createTable = (rows) => {
+        let table = `<div class='search-data'>`;
+        table += createHeader();
+        rows.map((item) => {
+          table += createRow(item);
+        });
+        table += `</div>`;
+        return table;
+      };
+    </script>
   </body>
 </html>
