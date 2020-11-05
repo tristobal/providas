@@ -41,7 +41,7 @@
         searchInput.focus();
         if (searchInput.value != '') {
           var values = searchInput.value;
-          fetch('https://medicosfachos.herokuapp.com/medic/' + values)
+          fetch('https://medicosantiderechos.herokuapp.com/medic/' + values)
             .then((response) => response.json())
             .then((json) => {
               if (json.length > 0) {
