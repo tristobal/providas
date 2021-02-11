@@ -6,11 +6,11 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
-@Document(collection = "medicos")
+@Document(collection = "medics")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Medic {
-    private String nombre;
-    private String institucion;
+    private String name;
+    private String institution;
     private String region;
 }

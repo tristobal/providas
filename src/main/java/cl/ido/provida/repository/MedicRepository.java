@@ -15,6 +15,6 @@ public interface MedicRepository extends MongoRepository<Medic, String> {
      * @param name
      * @return
      */
-    @Query(value = "{'nombre': {$regex : ?0, $options: 'i'}}")
+    @Query(value = "{'name': {$regex : ?0, $options: 'i'}}")
     List<Medic> findByNombreLikeOrderByNombreAsc(String name);
 }
