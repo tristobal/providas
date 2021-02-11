@@ -34,4 +34,8 @@ public class ProvidaController {
         return repository.findByNombreLikeOrderByNombreAsc(name);
     }
 
+    @GetMapping("/restricted")
+    public String restricted() {
+        return "Restricted";
+    }
 }
